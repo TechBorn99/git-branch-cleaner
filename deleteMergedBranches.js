@@ -14,10 +14,11 @@ function runCommand(command) {
 
 async function deleteLocalBranches(mainBranch) {
     const branches = await runCommand(`git branch --merged ${mainBranch}`);
-    const branchList = branches.split('\n').map(branch => branch.trim());
+    const branchList = branches.split('\n');
+    const branchListExtracted = branchList.map(branchRow => branchRow.split(' ')).flat();
 
-    for (const branch of branchList) {
-        if (branch && branch !== mainBranch) {
+    for (const branch of branchListExtracted) {
+        if (branch && branch !== mainBranch && branch !== '*') {
             console.log(`Deleting local branch: ${branch}`);
             await runCommand(`git branch -d ${branch}`);
         }
